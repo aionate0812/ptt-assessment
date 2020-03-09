@@ -9,6 +9,7 @@ import AuthContext from "./contexts/auth";
 
 //===Components
 import Signup from "./containers/Signup/Signup";
+import Navbar from "./containers/Navbar/Navbar";
 
 class App extends Component {
   state = {
@@ -36,6 +37,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <AuthContext.Provider value={this.state}>
+          <Route path="/" component={Navbar} />
           <Switch>
             <Route path="/signup" exact component={Signup} />
           </Switch>
