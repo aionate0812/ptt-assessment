@@ -28,10 +28,15 @@ class Transactions extends React.Component {
     const { ownedAssets } = this.state;
     console.log(this.state);
     return (
-      <div>
-        {ownedAssets.map((asset, i) => (
-          <Transaction key={i} asset={asset} />
-        ))}
+      <div className="container">
+        <h1>
+          <u>Transactions</u>
+        </h1>
+        <div className="py-4">
+          {ownedAssets.map((asset, i) => (
+            <Transaction key={i} asset={asset} />
+          ))}
+        </div>
       </div>
     );
   }

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { app as firebase } from "./firebase";
+import "bootstrap/dist/css/bootstrap.css";
 // import "./app.css";
 // import "./helper.css";
 
@@ -42,6 +43,9 @@ class App extends Component {
         <AuthContext.Provider value={this.state}>
           <Route path="/" component={Navbar} />
           <Switch>
+            <Route path="/" exact>
+              <Redirect to="/portfolio" />
+            </Route>
             <Route path="/signup" exact component={Signup} />
             <Route path="/login" exact component={Login} />
             <Route path="/portfolio" exact component={Portfolio} />

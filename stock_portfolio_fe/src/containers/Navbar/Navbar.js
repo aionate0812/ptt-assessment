@@ -17,8 +17,8 @@ class Navbar extends React.Component {
       if (this.context.user) {
         return (
           <React.Fragment>
-            <li>
-              <Link onClick={this.toLogout} to="/login">
+            <li className="nav-item">
+              <Link className="nav-link" onClick={this.toLogout} to="/login">
                 Logout
               </Link>
             </li>
@@ -27,11 +27,15 @@ class Navbar extends React.Component {
       } else {
         return (
           <React.Fragment>
-            <li>
-              <Link to="/login">Login</Link>
+            <li className="nav-item">
+              <Link className="nav-link" to="/login">
+                Login
+              </Link>
             </li>
-            <li>
-              <Link to="/signup">Sign Up</Link>
+            <li className="nav-item">
+              <Link className="nav-link" to="/signup">
+                Sign Up
+              </Link>
             </li>
           </React.Fragment>
         );
@@ -42,17 +46,37 @@ class Navbar extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <nav>
-          <div>
-            <Link to="/">Logo</Link>
-            <ul>
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+          <h3>
+            <Link to="/">Stonks</Link>
+          </h3>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div
+            className="collapse navbar-collapse flex-row-reverse"
+            id="navbarSupportedContent"
+          >
+            <ul className="navbar-nav">
               {this.context.authStatusCheck && this.context.user ? (
                 <React.Fragment>
-                  <li>
-                    <Link to="/">Transactions</Link>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/transactions">
+                      Transactions
+                    </Link>
                   </li>
-                  <li>
-                    <Link to="/portfolio">Portfolio</Link>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/portfolio">
+                      Portfolio
+                    </Link>
                   </li>
                 </React.Fragment>
               ) : (
