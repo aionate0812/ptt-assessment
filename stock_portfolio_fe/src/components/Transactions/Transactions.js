@@ -1,0 +1,40 @@
+import React from "react";
+import { app as firebase } from "../../firebase";
+import Assets from "../Assets/Assets";
+import { getAllAssets } from "../../services/TransactionsReq";
+import Transaction from "../Transaction/Transaction";
+
+class Transactions extends React.Component {
+  state = {
+    idToken: "",
+    ownedAssets: []
+  };
+  componentDidMount() {
+    firebase
+      .auth()
+      .currentUser.getIdToken(true)
+      .then(idToken => {
+        this.setState({ idToken });
+        return getAllAssets(idToken);
+      })
+      .then(ownedAssets => {
+        this.setState({ ownedAssets });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+  render() {
+    const { ownedAssets } = this.state;
+    console.log(this.state);
+    return (
+      <div>
+        {ownedAssets.map((asset, i) => (
+          <Transaction key={i} asset={asset} />
+        ))}
+      </div>
+    );
+  }
+}
+
+export default Transactions;
