@@ -11,8 +11,10 @@ app.use(cors());
 
 //Routes
 const usersRouter = require("./routes/users");
+const ordersRouter = require("./routes/orders");
 
 //API
 app.use("/users", checkFirebase, usersRouter);
+app.use("/portfolio", checkFirebase, ordersRouter);
 
 module.exports = { app };
