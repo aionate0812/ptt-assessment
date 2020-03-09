@@ -1,5 +1,6 @@
 import React from "react";
 import { app as firebase } from "../../firebase";
+import { insertUser } from "../../services/SignupReq";
 
 class Signup extends React.Component {
   state = {
@@ -14,7 +15,7 @@ class Signup extends React.Component {
   };
 
   handleCreateUser = e => {
-    const { email, password } = this.state;
+    const { username, email, password } = this.state;
     e.preventDefault();
     console.log(e);
     firebase
@@ -24,7 +25,10 @@ class Signup extends React.Component {
         return firebase.auth().currentUser.getIdToken(true);
       })
       .then(idToken => {
-        console.log(idToken);
+        return insertUser(username, email, idToken);
+      })
+      .then(data => {
+        console.log(data);
       })
       .catch(err => {
         console.log(err);
