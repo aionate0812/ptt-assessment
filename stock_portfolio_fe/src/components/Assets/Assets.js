@@ -3,11 +3,11 @@ import Asset from "../Asset/Asset";
 
 const Assets = props => {
   return (
-    <div>
+    <React.Fragment>
       {props.assets.map((asset, i) => {
         return <Asset key={i} asset={asset} />;
       })}
-    </div>
+    </React.Fragment>
   );
 };
 

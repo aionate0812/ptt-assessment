@@ -5,8 +5,10 @@ import { getTickerPrice, postOrder } from "../../services/PortfolioReq";
 class PurchaseForm extends React.Component {
   state = {
     ticker: "",
-    quantity: 0,
-    idToken: ""
+    quantity: "",
+    idToken: "",
+    tickerError: "",
+    quantityError: ""
   };
 
   handleChange = e => {
@@ -18,55 +20,82 @@ class PurchaseForm extends React.Component {
   handlePurchase = e => {
     e.preventDefault();
     const { ticker, quantity } = this.state;
-    firebase
-      .auth()
-      .currentUser.getIdToken(true)
-      .then(idToken => {
-        this.setState({ idToken });
-        return getTickerPrice(ticker);
-      })
-      .then(res => {
-        if (res.data["Error Message"]) {
-          console.log("Could not find symbol");
-          return;
-        }
-        const {
-          "01. symbol": symbol,
-          "02. open": open,
-          "05. price": price
-        } = res.data["Global Quote"];
-        return postOrder(symbol, quantity, price, this.state.idToken);
-      })
-      .then(orderResponse => {
-        console.log(orderResponse);
-      })
-      .catch(err => {
-        console.log(err);
-        if (err.response.status === 404) {
-          console.log({ symbol: null, message: err.response.data });
-        }
-      });
+    if (quantity > 0) {
+      firebase
+        .auth()
+        .currentUser.getIdToken(true)
+        .then(idToken => {
+          this.setState({ idToken });
+          return getTickerPrice(ticker);
+        })
+        .then(res => {
+          if (res.data["Error Message"]) {
+            this.setState({ tickerError: "Could not find symbol" });
+            return;
+          } else {
+            const {
+              "01. symbol": symbol,
+              "02. open": open,
+              "05. price": price
+            } = res.data["Global Quote"];
+            return postOrder(
+              symbol,
+              Number.parseInt(quantity),
+              price,
+              this.state.idToken
+            );
+          }
+        })
+        .then(orderResponse => {
+          if (orderResponse) {
+            this.props.refreshPortfolio(orderResponse.data);
+            this.setState({ tickerError: "", quantityError: "" });
+          }
+        });
+    } else {
+      this.setState({ quantityError: "Quantity should be 1 or more" });
+    }
   };
 
   render() {
-    const { ticker, quantity } = this.state;
+    const { ticker, quantity, tickerError, quantityError } = this.state;
     return (
       <form>
-        <label>Ticker</label>
-        <input
-          type="text"
-          name="ticker"
-          value={ticker}
-          onChange={this.handleChange}
-        />
-        <label>Quantity</label>
-        <input
-          type="number"
-          name="quantity"
-          value={quantity}
-          onChange={this.handleChange}
-        />
-        <button type="submit" onClick={this.handlePurchase}>
+        <div className="form-group">
+          <label htmlFor="ticker">Ticker</label>
+          <input
+            id="ticker"
+            type="text"
+            name="ticker"
+            placeholder="AAPL"
+            value={ticker}
+            onChange={this.handleChange}
+            className="form-control"
+          />
+          <small className="form-text text-muted">
+            {tickerError.length > 0 && tickerError}
+          </small>
+        </div>
+        <div className="form-group">
+          <label htmlFor="quantity">Quantity</label>
+          <input
+            id="quantity"
+            type="number"
+            name="quantity"
+            placeholder="25"
+            value={quantity}
+            onChange={this.handleChange}
+            className="form-control"
+          />
+          <small className="form-text text-muted">
+            {quantityError.length > 0 && quantityError}
+          </small>
+        </div>
+        <button
+          type="submit"
+          className="btn btn-primary"
+          onClick={this.handlePurchase}
+        >
           Purchase
         </button>
       </form>

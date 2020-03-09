@@ -40,31 +40,42 @@ export default class Login extends React.Component {
 
   Forms = () => {
     return (
-      <div>
-        <form>
-          <h6>Enter your email and password</h6>
-          <label>Email</label>
-          <input
-            name="email"
-            type="email"
-            value={this.state.email}
-            onChange={this.handleChange}
-          />
-          <div>
-            <label>Password</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              value={this.state.password}
-              onChange={this.handleChange}
-            />
-          </div>
-          <button onClick={this.handleLogIn}>Login</button>
-          <div>
-            <Link to="/signup">Create an account?</Link>
-          </div>
-        </form>
+      <div className="container d-flex justify-content-center">
+        <div className="card p-3 mt-5 col-8">
+          <form>
+            <h2 className="text-center">Login</h2>
+            <div className="form-group">
+              <label htmlFor="email">Email</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="email@ttp.com"
+                value={this.state.email}
+                onChange={this.handleChange}
+                className="form-control"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="******"
+                value={this.state.password}
+                onChange={this.handleChange}
+                className="form-control"
+              />
+            </div>
+            <button className="btn btn-primary" onClick={this.handleLogIn}>
+              Login
+            </button>
+            <div className="mt-2">
+              <Link to="/signup">Create an account?</Link>
+            </div>
+          </form>
+        </div>
       </div>
     );
   };

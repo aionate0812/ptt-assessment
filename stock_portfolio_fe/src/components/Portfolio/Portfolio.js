@@ -42,13 +42,47 @@ class Portfolio extends React.Component {
         this.setState({ ownedAssets });
       });
   }
+
+  refreshPortfolio = ownedAssets => {
+    let assetsTickers = ownedAssets.map(e => getTickerPrice(e.ticker));
+    this.setState({ ownedAssets });
+    Promise.all(assetsTickers).then(assets => {
+      let latestAssetsInfo = {};
+      console.log(assets);
+      assets.length > 0 &&
+        assets.forEach(e => {
+          const {
+            "01. symbol": ticker,
+            "02. open": open,
+            "05. price": price
+          } = e.data["Global Quote"];
+          latestAssetsInfo[ticker] = { open, price };
+        });
+      let ownedAssets = this.state.ownedAssets.map(e => {
+        e.price = latestAssetsInfo[e.ticker].price;
+        e.open = latestAssetsInfo[e.ticker].open;
+        return e;
+      });
+      this.setState({ ownedAssets });
+    });
+  };
+
   render() {
     const { ownedAssets } = this.state;
     console.log(this.state);
     return (
-      <div>
-        <PurchaseForm />
-        <Assets assets={ownedAssets} />
+      <div className="container">
+        <h2 className="mt-3">
+          <u>Portfolio</u>
+        </h2>
+        <div className="d-flex">
+          <div className="col-8 pl-0 mt-5">
+            <Assets assets={ownedAssets} />
+          </div>
+          <div className="card col-4 p-3 mt-5">
+            <PurchaseForm refreshPortfolio={this.refreshPortfolio} />
+          </div>
+        </div>
       </div>
     );
   }

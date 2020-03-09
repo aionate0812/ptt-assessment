@@ -9,7 +9,7 @@ let alphaVantageBaseUrl = "https://www.alphavantage.co/";
 
 const getTickerPrice = ticker => {
   return axios.get(
-    `query?function=GLOBAL_QUOTE&symbol=${ticker}&interval=5min&apikey=9O9P7MKO9FLVDYUW`,
+    `query?function=GLOBAL_QUOTE&symbol=${ticker}&interval=5min&apikey=U9UH7D48INMOZM6X`,
     {
       baseURL: alphaVantageBaseUrl
     }
