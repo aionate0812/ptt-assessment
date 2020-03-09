@@ -51,4 +51,21 @@ portfolioRouter.get("/assets/", (req, res) => {
     });
 });
 
+// GET - READ
+portfolioRouter.get("/assets/all", (req, res) => {
+  const { uid: token } = res.locals;
+  PortfolioService.read(token)
+    .then(assets => {
+      res.status(200);
+      res.send(assets);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.send({
+        Message: err
+      });
+    });
+});
+
 module.exports = portfolioRouter;

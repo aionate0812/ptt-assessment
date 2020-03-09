@@ -12,6 +12,7 @@ import Signup from "./containers/Signup/Signup";
 import Navbar from "./containers/Navbar/Navbar";
 import Login from "./containers/Login/Login";
 import Portfolio from "./containers/Portfolio/Portfolio";
+import Transactions from "./containers/Transactions/Transactions";
 
 class App extends Component {
   state = {
@@ -44,6 +45,7 @@ class App extends Component {
             <Route path="/signup" exact component={Signup} />
             <Route path="/login" exact component={Login} />
             <Route path="/portfolio" exact component={Portfolio} />
+            <Route path="/transactions" exact component={Transactions} />
           </Switch>
         </AuthContext.Provider>
       </BrowserRouter>
