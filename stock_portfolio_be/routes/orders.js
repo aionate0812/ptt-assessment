@@ -3,7 +3,7 @@ const ordersRouter = express.Router();
 const OrdersService = require("../services/orders");
 
 // POST - CREATE
-ordersRouter.post("/orders", (req, res) => {
+ordersRouter.post("/", (req, res) => {
   const { uid: token } = res.locals;
   let { ticker, amount, price } = req.body;
   OrdersService.create(ticker, amount, price, token)

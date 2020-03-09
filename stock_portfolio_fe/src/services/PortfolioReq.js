@@ -1,5 +1,6 @@
 import axios from "./axios";
 let portfolioEndpointBase = "portfolio";
+let ordersEndpointBase = "orders";
 let iexBaseUrl = "https://cloud.iexapis.com/stable/";
 let stockEndpoint = "stock/";
 let alphaVantageBaseUrl = "https://www.alphavantage.co/";
@@ -8,7 +9,7 @@ let alphaVantageBaseUrl = "https://www.alphavantage.co/";
 
 const getTickerPrice = ticker => {
   return axios.get(
-    `query?function=GLOBAL_QUOTE&symbol=${ticker}&interval=5min&apikey=FD7D5GD73EQ6KN0K`,
+    `query?function=GLOBAL_QUOTE&symbol=${ticker}&interval=5min&apikey=9O9P7MKO9FLVDYUW`,
     {
       baseURL: alphaVantageBaseUrl
     }
@@ -16,11 +17,27 @@ const getTickerPrice = ticker => {
 };
 
 const postOrder = (ticker, amount, price, token) => {
-  return axios.post(`${portfolioEndpointBase}/orders/?token=${token}`, {
+  return axios.post(`${ordersEndpointBase}/?token=${token}`, {
     ticker,
     amount,
     price
   });
 };
 
-export { getTickerPrice, postOrder };
+const getAssets = token => {
+  return axios
+    .get(`${portfolioEndpointBase}/assets/?token=${token}`)
+    .then(res => res.data);
+};
+
+const getAssetsLatestInfo = assets => {
+  let assetsCSV = assets.join(",");
+  return axios
+    .get(
+      `${stockEndpoint}market/batch?symbols=${assetsCSV}&types=quote&range=5m&token=pk_86254871c3e5498384d11dfc38f9ce7f`,
+      { baseURL: iexBaseUrl }
+    )
+    .then(res => res.data);
+};
+
+export { getTickerPrice, postOrder, getAssets, getAssetsLatestInfo };
