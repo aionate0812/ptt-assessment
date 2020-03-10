@@ -85,7 +85,7 @@ export default class Login extends React.Component {
   };
 
   Fail = () => {
-    return this.state.loading ? <p>Loading</p> : <this.Forms />;
+    return this.state.loading ? <></> : <this.Forms />;
   };
 
   render() {

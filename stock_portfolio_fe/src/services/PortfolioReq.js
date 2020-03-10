@@ -40,4 +40,16 @@ const getAssetsLatestInfo = assets => {
     .then(res => res.data);
 };
 
-export { getTickerPrice, postOrder, getAssets, getAssetsLatestInfo };
+const getBalance = token => {
+  return axios
+    .get(`${portfolioEndpointBase}/balance/?token=${token}`)
+    .then(res => res.data);
+};
+
+export {
+  getTickerPrice,
+  postOrder,
+  getAssets,
+  getAssetsLatestInfo,
+  getBalance
+};
