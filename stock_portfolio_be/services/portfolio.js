@@ -20,4 +20,11 @@ portfolioService.read = token => {
   });
 };
 
+portfolioService.readBalance = token => {
+  return db.oneOrNone(
+    "SELECT $1:name.userid, $2:name.portfolioid, $2:name.balance FROM $1:name INNER JOIN $2:name ON $1:name.userid = $2:name.userid WHERE token=$3",
+    [users, portfolio, token]
+  );
+};
+
 module.exports = portfolioService;

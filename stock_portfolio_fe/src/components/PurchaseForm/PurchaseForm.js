@@ -8,7 +8,8 @@ class PurchaseForm extends React.Component {
     quantity: "",
     idToken: "",
     tickerError: "",
-    quantityError: ""
+    quantityError: "",
+    balanceError: ""
   };
 
   handleChange = e => {
@@ -47,9 +48,19 @@ class PurchaseForm extends React.Component {
           }
         })
         .then(orderResponse => {
+          console.log(orderResponse);
           if (orderResponse) {
-            this.props.refreshPortfolio(orderResponse.data);
-            this.setState({ tickerError: "", quantityError: "" });
+            if (orderResponse.data.balanceError) {
+              this.setState({ balanceError: orderResponse.data.balanceError });
+              return;
+            } else {
+              this.props.refreshPortfolio(orderResponse.data);
+              this.setState({
+                tickerError: "",
+                quantityError: "",
+                balanceError: ""
+              });
+            }
           }
         });
     } else {
@@ -58,9 +69,16 @@ class PurchaseForm extends React.Component {
   };
 
   render() {
-    const { ticker, quantity, tickerError, quantityError } = this.state;
+    const {
+      ticker,
+      quantity,
+      tickerError,
+      quantityError,
+      balanceError
+    } = this.state;
     return (
       <form>
+        <label>{balanceError.length > 0 && balanceError}</label>
         <div className="form-group">
           <label htmlFor="ticker">Ticker</label>
           <input

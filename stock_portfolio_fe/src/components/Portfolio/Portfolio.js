@@ -2,12 +2,17 @@ import React from "react";
 import PurchaseForm from "../PurchaseForm/PurchaseForm";
 import { app as firebase } from "../../firebase";
 import Assets from "../Assets/Assets";
-import { getAssets, getTickerPrice } from "../../services/PortfolioReq";
+import {
+  getAssets,
+  getTickerPrice,
+  getBalance
+} from "../../services/PortfolioReq";
 
 class Portfolio extends React.Component {
   state = {
     idToken: "",
-    ownedAssets: []
+    ownedAssets: [],
+    availableBalance: ""
   };
   componentDidMount() {
     firebase
@@ -24,7 +29,6 @@ class Portfolio extends React.Component {
       })
       .then(assets => {
         let latestAssetsInfo = {};
-        console.log(assets);
         assets.length > 0 &&
           assets.forEach(e => {
             const {
@@ -40,6 +44,10 @@ class Portfolio extends React.Component {
           return e;
         });
         this.setState({ ownedAssets });
+        return getBalance(this.state.idToken);
+      })
+      .then(balance => {
+        this.setState({ availableBalance: balance.balance });
       });
   }
 
@@ -63,12 +71,14 @@ class Portfolio extends React.Component {
         e.open = latestAssetsInfo[e.ticker].open;
         return e;
       });
-      this.setState({ ownedAssets });
+      getBalance(this.state.idToken).then(balance => {
+        this.setState({ availableBalance: balance.balance, ownedAssets });
+      });
     });
   };
 
   render() {
-    const { ownedAssets } = this.state;
+    const { ownedAssets, availableBalance } = this.state;
     console.log(this.state);
     return (
       <div className="container">
@@ -80,6 +90,7 @@ class Portfolio extends React.Component {
             <Assets assets={ownedAssets} />
           </div>
           <div className="card col-4 p-3 mt-5">
+            <h3>Available Balance ${availableBalance}</h3>
             <PurchaseForm refreshPortfolio={this.refreshPortfolio} />
           </div>
         </div>

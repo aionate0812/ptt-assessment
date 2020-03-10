@@ -20,7 +20,7 @@ class Signup extends React.Component {
         this.setState({ loading: false });
       }, 1000);
     }
-    return <h2>LOADING</h2>;
+    return <></>;
   };
   render() {
     return (
