@@ -9,35 +9,40 @@ class PurchaseForm extends React.Component {
     idToken: "",
     tickerError: "",
     quantityError: "",
-    balanceError: ""
+    balanceError: "",
+    purchasing: false,
   };
 
-  handleChange = e => {
+  handleChange = (e) => {
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
-  handlePurchase = e => {
+  handlePurchase = (e) => {
     e.preventDefault();
+    this.setState({ purchasing: true });
     const { ticker, quantity } = this.state;
     if (quantity > 0) {
       firebase
         .auth()
         .currentUser.getIdToken(true)
-        .then(idToken => {
+        .then((idToken) => {
           this.setState({ idToken });
           return getTickerPrice(ticker);
         })
-        .then(res => {
+        .then((res) => {
           if (res.data["Error Message"]) {
-            this.setState({ tickerError: "Could not find symbol" });
+            this.setState({
+              tickerError: "Could not find symbol",
+              purchasing: false,
+            });
             return;
           } else {
             const {
               "01. symbol": symbol,
               "02. open": open,
-              "05. price": price
+              "05. price": price,
             } = res.data["Global Quote"];
             return postOrder(
               symbol,
@@ -47,24 +52,30 @@ class PurchaseForm extends React.Component {
             );
           }
         })
-        .then(orderResponse => {
-          console.log(orderResponse);
+        .then((orderResponse) => {
           if (orderResponse) {
             if (orderResponse.data.balanceError) {
-              this.setState({ balanceError: orderResponse.data.balanceError });
+              this.setState({
+                balanceError: orderResponse.data.balanceError,
+                purchasing: false,
+              });
               return;
             } else {
               this.props.refreshPortfolio(orderResponse.data);
               this.setState({
                 tickerError: "",
                 quantityError: "",
-                balanceError: ""
+                balanceError: "",
+                purchasing: false,
               });
             }
           }
         });
     } else {
-      this.setState({ quantityError: "Quantity should be 1 or more" });
+      this.setState({
+        quantityError: "Quantity should be 1 or more",
+        purchasing: false,
+      });
     }
   };
 
@@ -74,7 +85,7 @@ class PurchaseForm extends React.Component {
       quantity,
       tickerError,
       quantityError,
-      balanceError
+      balanceError,
     } = this.state;
     return (
       <form>
@@ -113,8 +124,9 @@ class PurchaseForm extends React.Component {
           type="submit"
           className="btn btn-primary"
           onClick={this.handlePurchase}
+          disabled={this.state.purchasing}
         >
-          Purchase
+          {this.state.purchasing ? "Purchasing..." : "Purchase"}
         </button>
       </form>
     );
