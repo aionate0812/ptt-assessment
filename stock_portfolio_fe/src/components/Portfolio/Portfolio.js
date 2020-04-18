@@ -5,40 +5,42 @@ import Assets from "../Assets/Assets";
 import {
   getAssets,
   getTickerPrice,
-  getBalance
+  getBalance,
 } from "../../services/PortfolioReq";
 
 class Portfolio extends React.Component {
   state = {
     idToken: "",
     ownedAssets: [],
-    availableBalance: ""
+    availableBalance: "",
   };
   componentDidMount() {
     firebase
       .auth()
       .currentUser.getIdToken(true)
-      .then(idToken => {
+      .then((idToken) => {
         this.setState({ idToken });
         return getAssets(idToken);
       })
-      .then(ownedAssets => {
-        let assetsTickers = ownedAssets.map(e => getTickerPrice(e.ticker));
+      .then((ownedAssets) => {
+        console.log(ownedAssets);
+        let assetsTickers = ownedAssets.map((e) => getTickerPrice(e.ticker));
         this.setState({ ownedAssets });
         return Promise.all(assetsTickers);
       })
-      .then(assets => {
+      .then((assets) => {
+        console.log(assets);
         let latestAssetsInfo = {};
         assets.length > 0 &&
-          assets.forEach(e => {
+          assets.forEach((e) => {
             const {
               "01. symbol": ticker,
               "02. open": open,
-              "05. price": price
+              "05. price": price,
             } = e.data["Global Quote"];
             latestAssetsInfo[ticker] = { open, price };
           });
-        let ownedAssets = this.state.ownedAssets.map(e => {
+        let ownedAssets = this.state.ownedAssets.map((e) => {
           e.price = latestAssetsInfo[e.ticker].price;
           e.open = latestAssetsInfo[e.ticker].open;
           return e;
@@ -46,32 +48,34 @@ class Portfolio extends React.Component {
         this.setState({ ownedAssets });
         return getBalance(this.state.idToken);
       })
-      .then(balance => {
+      .then((balance) => {
         this.setState({ availableBalance: balance.balance });
       });
   }
 
-  refreshPortfolio = ownedAssets => {
-    let assetsTickers = ownedAssets.map(e => getTickerPrice(e.ticker));
+  refreshPortfolio = (ownedAssets) => {
+    console.log(ownedAssets);
+    let assetsTickers = ownedAssets.map((e) => getTickerPrice(e.ticker));
     this.setState({ ownedAssets });
-    Promise.all(assetsTickers).then(assets => {
-      let latestAssetsInfo = {};
+    Promise.all(assetsTickers).then((assets) => {
       console.log(assets);
+      let latestAssetsInfo = {};
       assets.length > 0 &&
-        assets.forEach(e => {
+        assets.forEach((e) => {
+          console.log(e);
           const {
             "01. symbol": ticker,
             "02. open": open,
-            "05. price": price
+            "05. price": price,
           } = e.data["Global Quote"];
           latestAssetsInfo[ticker] = { open, price };
         });
-      let ownedAssets = this.state.ownedAssets.map(e => {
+      let ownedAssets = this.state.ownedAssets.map((e) => {
         e.price = latestAssetsInfo[e.ticker].price;
         e.open = latestAssetsInfo[e.ticker].open;
         return e;
       });
-      getBalance(this.state.idToken).then(balance => {
+      getBalance(this.state.idToken).then((balance) => {
         this.setState({ availableBalance: balance.balance, ownedAssets });
       });
     });
@@ -79,7 +83,6 @@ class Portfolio extends React.Component {
 
   render() {
     const { ownedAssets, availableBalance } = this.state;
-    console.log(this.state);
     return (
       <div className="container">
         <h2 className="mt-3">

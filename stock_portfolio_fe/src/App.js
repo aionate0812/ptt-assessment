@@ -18,16 +18,14 @@ import Transactions from "./containers/Transactions/Transactions";
 class App extends Component {
   state = {
     user: null,
-    authStatusCheck: false
+    authStatusCheck: false,
   };
 
   componentDidMount() {
-    this.unsubscribe = firebase.auth().onAuthStateChanged(user => {
-      console.log("user", user);
+    this.unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.setState({ user, authStatusCheck: true });
       } else {
-        console.log(user);
         this.setState({ user: null, authStatusCheck: true });
       }
     });

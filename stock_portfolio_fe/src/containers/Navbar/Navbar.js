@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import AuthContext from "../../contexts/auth";
 import { app as firebase } from "../../firebase";
 
@@ -8,7 +8,7 @@ class Navbar extends React.Component {
 
   componentDidMount = () => {};
 
-  toLogout = e => {
+  toLogout = (e) => {
     firebase.auth().signOut();
   };
 

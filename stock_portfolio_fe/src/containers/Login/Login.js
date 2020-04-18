@@ -8,7 +8,7 @@ export default class Login extends React.Component {
   state = {
     email: "",
     password: "",
-    loading: true
+    loading: true,
   };
 
   componentDidMount = () => {
@@ -17,13 +17,13 @@ export default class Login extends React.Component {
     }, 1000);
   };
 
-  handleChange = e => {
+  handleChange = (e) => {
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
-  handleLogIn = e => {
+  handleLogIn = (e) => {
     e.preventDefault();
     const { email, password } = this.state;
     firebase
@@ -32,7 +32,7 @@ export default class Login extends React.Component {
       .then(() => {
         return null;
       })
-      .catch(err => {
+      .catch((err) => {
         const { message } = err;
         console.log(message);
       });
@@ -89,10 +89,9 @@ export default class Login extends React.Component {
   };
 
   render() {
-    console.log(this.state);
     return (
       <AuthContext.Consumer>
-        {user => {
+        {(user) => {
           return (
             <AuthWrapper
               user={user}

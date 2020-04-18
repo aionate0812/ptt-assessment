@@ -8,29 +8,28 @@ class Signup extends React.Component {
     username: "",
     email: "",
     password: "",
-    errorMessage: ""
+    errorMessage: "",
   };
 
-  handleInput = e => {
+  handleInput = (e) => {
     const { name: inputName, value } = e.target;
     this.setState({ [inputName]: value });
   };
 
-  handleCreateUser = e => {
+  handleCreateUser = (e) => {
     const { username, email, password } = this.state;
     e.preventDefault();
-    console.log(e);
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
         return firebase.auth().currentUser.getIdToken(true);
       })
-      .then(idToken => {
+      .then((idToken) => {
         return insertUser(username, email, idToken);
       })
-      .then(data => {})
-      .catch(err => {
+      .then((data) => {})
+      .catch((err) => {
         if (err.code === "auth/email-already-in-use") {
           this.setState({ errorMessage: err.message });
         }
@@ -39,7 +38,6 @@ class Signup extends React.Component {
 
   render() {
     const { username, email, password, errorMessage } = this.state;
-    console.log(this.state);
     return (
       <div className="container d-flex justify-content-center">
         <div className="card p-3 mt-5 col-8">
