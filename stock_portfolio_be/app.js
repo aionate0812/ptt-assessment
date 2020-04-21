@@ -7,7 +7,7 @@ const { checkFirebase } = require("./firebase/firebaseAuth");
 //Middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({ origin: "*" }));
 
 //Routes
 const usersRouter = require("./routes/users");

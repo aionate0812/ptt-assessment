@@ -7,15 +7,15 @@ usersRouter.post("/", (req, res) => {
   const { uid: token } = res.locals;
   let { username, email } = req.body;
   UsersService.create(username, email, token)
-    .then(data => {
+    .then((data) => {
       res.status(201);
       res.send(data);
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       res.status(400);
       res.send({
-        Message: err
+        Message: err,
       });
     });
 });
@@ -24,14 +24,14 @@ usersRouter.post("/", (req, res) => {
 usersRouter.get("/", (req, res) => {
   const { uid: token } = res.locals;
   UsersService.read(token)
-    .then(data => {
+    .then((data) => {
       res.status(200);
       res.send(data);
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(400);
       res.send({
-        Message: err
+        Message: err,
       });
     });
 });

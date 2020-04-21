@@ -6,11 +6,11 @@ import SignupComponent from "../../components/Signup/Signup";
 
 class Signup extends React.Component {
   state = {
-    loading: true
+    loading: true,
   };
 
   Success = () => {
-    return <Redirect to="/" />;
+    return <Redirect to="/login" />;
   };
 
   Fail = () => {
@@ -26,7 +26,7 @@ class Signup extends React.Component {
     return (
       <>
         <AuthContext.Consumer>
-          {user => {
+          {(user) => {
             return (
               <AuthWrapper
                 user={user}

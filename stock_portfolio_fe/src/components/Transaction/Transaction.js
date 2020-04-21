@@ -1,6 +1,6 @@
 import React from "react";
 
-const Transaction = props => {
+const Transaction = (props) => {
   const { ticker, amount, price } = props.asset;
   return (
     <div className="col-5 border-bottom border-dark pl-0 pt-3">

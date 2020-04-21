@@ -24,7 +24,12 @@ const postOrder = (ticker, amount, price, token) => {
 const getAssets = (token) => {
   return axios
     .get(`${portfolioEndpointBase}/assets/?token=${token}`)
-    .then((res) => res.data);
+    .then((res) => {
+      return res.data;
+    })
+    .catch((res) => {
+      console.log(res);
+    });
 };
 
 const getBalance = (token) => {

@@ -23,13 +23,11 @@ class Portfolio extends React.Component {
         return getAssets(idToken);
       })
       .then((ownedAssets) => {
-        console.log(ownedAssets);
         let assetsTickers = ownedAssets.map((e) => getTickerPrice(e.ticker));
         this.setState({ ownedAssets });
         return Promise.all(assetsTickers);
       })
       .then((assets) => {
-        console.log(assets);
         let latestAssetsInfo = {};
         assets.length > 0 &&
           assets.forEach((e) => {
@@ -50,19 +48,17 @@ class Portfolio extends React.Component {
       })
       .then((balance) => {
         this.setState({ availableBalance: balance.balance });
-      });
+      })
+      .catch((err) => {});
   }
 
   refreshPortfolio = (ownedAssets) => {
-    console.log(ownedAssets);
     let assetsTickers = ownedAssets.map((e) => getTickerPrice(e.ticker));
     this.setState({ ownedAssets });
     Promise.all(assetsTickers).then((assets) => {
-      console.log(assets);
       let latestAssetsInfo = {};
       assets.length > 0 &&
         assets.forEach((e) => {
-          console.log(e);
           const {
             "01. symbol": ticker,
             "02. open": open,
@@ -89,11 +85,16 @@ class Portfolio extends React.Component {
           <u>Portfolio</u>
         </h2>
         <div className="d-flex">
-          <div className="col-8 pl-0 mt-5">
+          <div className="col-7 pl-0 mt-5">
             <Assets assets={ownedAssets} />
           </div>
-          <div className="card col-4 p-3 mt-5">
-            <h3>Available Balance ${availableBalance}</h3>
+          <div className="card col-5 p-3 mt-5">
+            <h3>
+              Available Balance{" "}
+              {typeof availableBalance === "string"
+                ? `$ ${availableBalance}`
+                : `$ ${availableBalance.toFixed(2)}`}
+            </h3>
             <PurchaseForm refreshPortfolio={this.refreshPortfolio} />
           </div>
         </div>

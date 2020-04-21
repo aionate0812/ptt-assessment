@@ -2,6 +2,7 @@ import React from "react";
 import { app as firebase } from "../../firebase";
 import { insertUser } from "../../services/SignupReq";
 import "bootstrap/dist/css/bootstrap.css";
+import { Redirect } from "react-router-dom";
 
 class Signup extends React.Component {
   state = {
@@ -9,6 +10,7 @@ class Signup extends React.Component {
     email: "",
     password: "",
     errorMessage: "",
+    signupSuccess: false,
   };
 
   handleInput = (e) => {
@@ -28,7 +30,11 @@ class Signup extends React.Component {
       .then((idToken) => {
         return insertUser(username, email, idToken);
       })
-      .then((data) => {})
+      .then((res) => {
+        if (res.data.portfolioid) {
+          this.setState({ signupSuccess: true });
+        }
+      })
       .catch((err) => {
         if (err.code === "auth/email-already-in-use") {
           this.setState({ errorMessage: err.message });
@@ -37,8 +43,16 @@ class Signup extends React.Component {
   };
 
   render() {
-    const { username, email, password, errorMessage } = this.state;
-    return (
+    const {
+      username,
+      email,
+      password,
+      errorMessage,
+      signupSuccess,
+    } = this.state;
+    return signupSuccess ? (
+      <Redirect to="/login" />
+    ) : (
       <div className="container d-flex justify-content-center">
         <div className="card p-3 mt-5 col-8">
           <h2 className="text-center">Registration</h2>
