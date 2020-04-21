@@ -8,18 +8,18 @@ ordersRouter.post("/", (req, res) => {
   const { uid: token } = res.locals;
   let { ticker, amount, price } = req.body;
   PortfolioService.readBalance(token)
-    .then(portfolioInfo => {
+    .then((portfolioInfo) => {
       if (portfolioInfo.balance > amount * price) {
         let newBalance = portfolioInfo.balance - amount * price;
         OrdersService.create(ticker, amount, price, newBalance, token)
-          .then(assets => {
+          .then((assets) => {
             let uniqueAssets = {};
             for (let i = 0; i < assets.length; i++) {
               if (!uniqueAssets[assets[i].ticker]) {
                 uniqueAssets[assets[i].ticker] = {
                   ticker: assets[i].ticker,
                   amount: assets[i].amount,
-                  price: assets[i].price
+                  price: assets[i].price,
                 };
               } else {
                 let { amount } = uniqueAssets[assets[i].ticker];
@@ -30,7 +30,7 @@ ordersRouter.post("/", (req, res) => {
             res.status(200);
             res.send(Object.values(uniqueAssets));
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err);
           });
       } else {
@@ -38,11 +38,11 @@ ordersRouter.post("/", (req, res) => {
         res.send({ balanceError: "Insuficient Funds" });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       res.status(400);
       res.send({
-        Message: err
+        Message: err,
       });
     });
 });

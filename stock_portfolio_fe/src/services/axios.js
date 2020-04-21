@@ -1,4 +1,4 @@
 import Axios from "axios";
-let baseURL = "http://localhost:8002/";
+let baseURL = "https://frozen-eyrie-54800.herokuapp.com/";
 let axios = Axios.create({ baseURL });
 export default axios;

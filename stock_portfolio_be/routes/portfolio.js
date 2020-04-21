@@ -1,19 +1,19 @@
 const express = require("express");
 const portfolioRouter = express.Router();
 const PortfolioService = require("../services/portfolio");
-
+const cors = require("cors");
 // GET - READ
 portfolioRouter.get("/assets/", (req, res) => {
   const { uid: token } = res.locals;
   PortfolioService.read(token)
-    .then(assets => {
+    .then((assets) => {
       let uniqueAssets = {};
       for (let i = 0; i < assets.length; i++) {
         if (!uniqueAssets[assets[i].ticker]) {
           uniqueAssets[assets[i].ticker] = {
             ticker: assets[i].ticker,
             amount: assets[i].amount,
-            price: assets[i].price
+            price: assets[i].price,
           };
         } else {
           let { amount } = uniqueAssets[assets[i].ticker];
@@ -24,11 +24,11 @@ portfolioRouter.get("/assets/", (req, res) => {
       res.status(200);
       res.send(Object.values(uniqueAssets));
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       res.status(400);
       res.send({
-        Message: err
+        Message: err,
       });
     });
 });
@@ -37,15 +37,15 @@ portfolioRouter.get("/assets/", (req, res) => {
 portfolioRouter.get("/assets/all", (req, res) => {
   const { uid: token } = res.locals;
   PortfolioService.read(token)
-    .then(assets => {
+    .then((assets) => {
       res.status(200);
       res.send(assets);
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       res.status(400);
       res.send({
-        Message: err
+        Message: err,
       });
     });
 });
@@ -54,15 +54,15 @@ portfolioRouter.get("/assets/all", (req, res) => {
 portfolioRouter.get("/balance/", (req, res) => {
   const { uid: token } = res.locals;
   PortfolioService.readBalance(token)
-    .then(portfolioInfo => {
+    .then((portfolioInfo) => {
       res.status(200);
       res.send(portfolioInfo);
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       res.status(400);
       res.send({
-        Message: err
+        Message: err,
       });
     });
 });
